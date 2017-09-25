@@ -1,10 +1,10 @@
-interface Todo {
+interface ITodo {
     id: string
     title: string
     completed: boolean
 }
 
-interface TodoList {
+interface ITodoList {
     count: number
-    todos: Todo[]
+    todos: ITodo[]
 }
