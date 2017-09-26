@@ -21,17 +21,20 @@ interface ITodoList {
 
 index.js:
 ```
-convert('./ts/TodoList.ts')
-    .then(interfaces => {
-        const { ITodo, ITodoList } = interfaces
-        
-        const todo = {
-            id: '#121312',
-            title: 'Todo title',
-            completed: false
-        }
+const { convert, matchesType } = require('./tsConvert')
+const { ITodo, ITodoList } = await convert('./ts/TodoList.ts')
 
-        console.log(equals(todo, ITodo)) // true
-        console.log(equals(todo, ITodoList)) // false
-    });
+const todo = {
+    id: '#121312',
+    title: 'Todo title',
+    completed: false
+}
+
+const todos = {
+    count: 1,
+    todos: {}
+}
+
+console.log(matchesType(todo, ITodo)) // true
+console.log(matchesType(todos, ITodoList)) // Type mismatch: Expected property 'todos' to be of type 'array', but got 'object'
 ```

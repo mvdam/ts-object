@@ -1,15 +1,21 @@
-const { convert, equals } = require('./tsConvert')
+const { convert, matchesType } = require('./tsConvert')
 
-convert('./ts/TodoList.ts')
-    .then(interfaces => {
-        const { ITodo, ITodoList } = interfaces
-        
-        const todo = {
-            id: '#121312',
-            title: 'Todo title',
-            completed: false
-        }
+async function start() {
+    const { ITodo, ITodoList } = await convert('./ts/TodoList.ts')
+    
+    const todo = {
+        id: '#121312',
+        title: 'Todo title',
+        completed: false
+    }
 
-        console.log(equals(todo, ITodo)) // true
-        console.log(equals(todo, ITodoList)) // false
-    });
+    const todos = {
+        count: 1,
+        todos: {}
+    }
+
+    console.log(matchesType(todo, ITodo)) // true
+    console.log(matchesType(todos, ITodoList)) // false
+}
+
+start()

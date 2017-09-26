@@ -39,6 +39,7 @@ function toTokens(content) {
     blocks.forEach(block => {
         const [content, type, name, props] = block
         const descriptor = {
+            name,
             kind: type,
             props: {}
         }
@@ -68,17 +69,40 @@ function convert(path) {
         })
 }
 
-function equals(input, type) {
+function getTypeOf(input) {
+    const type = typeof input
+
+    switch(type) {
+        case 'string':
+        case 'number':
+        case 'boolean':
+            return type
+        default:
+            if (type === 'object') {
+                return isArray(input) ? 'array' : type
+            } else {
+                return type
+            }
+    }
+}
+
+function isArray(input) {
+    return Array.isArray(input)
+}
+
+function matchesType(input, type) {
     let match = true
 
     if (typeof input === 'object') {
         Object.keys(input).forEach(key => {
             if (type.props[key]) {
-                if (typeof input[key] !== type.props[key]) {
+                if (getTypeOf(input[key]) !== type.props[key]) {
                     match = false
+                    console.error(`Type mismatch: Expected property '${key}' to be of type '${type.props[key]}', but got '${getTypeOf(input[key])}'`)
                 }
             } else {
                 match = false
+                console.error(`Type mismatch: Property '${key}' does not exist on type '${type.name}'`)
             }
         })
     }
@@ -87,4 +111,4 @@ function equals(input, type) {
 }
 
 exports.convert = convert
-exports.equals = equals
+exports.matchesType = matchesType
